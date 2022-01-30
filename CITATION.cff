@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this dataset, please cite it as below."
+authors:
+- family-names: "Tumbalam Gooty"
+  given-names: "Radhakrishna"
+  orcid: "https://orcid.org/0000-0002-7873-4341"
+- family-names: "Agrawal"
+  given-names: "Rakesh"
+  orcid: "https://orcid.org/0000-0002-6746-9829"
+- family-names: "Tawarmalani"
+  given-names: "Mohit"
+  orcid: "https://orcid.org/0000-0003-3085-0084"
+title: "Test Set of Representative Mixtures for Separation via Distillation"
+version: 1.0.1
+doi: 10.5281/zenodo.5920838
+date-released: 2022-01-30
+url: "https://github.com/AgrawalDistillation/minlp-distillation-testset"
