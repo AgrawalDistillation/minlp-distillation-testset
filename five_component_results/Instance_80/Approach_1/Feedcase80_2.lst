@@ -1,0 +1,1843 @@
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                 10/10/21 16:06:35 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   1  Sets
+   2      c                  Track continuous variables          /c1*c563/
+   3      i                  Track linear equality constraints   /i1*i368/
+   4      j                  Track linear inequality constraints /j1*j74/
+   5      stat               Model and Solver status   /modelstat,solvestat/;
+   6   
+   7  Variables
+   8      x(c)                List of continuous variables
+   9      mvd                 Objective function -- Minimum vapor duty;
+  10   
+  11  Parameters
+  12      objf(c)             Contains coefficients of variables in objective
+  13      Aeq(i,c)            Continuous var coefficients in equality constraints
+  14      Aineq(j,c)          Continuous var coefficients in inequality constraints
+  15      beq(i)              RHS of equality constraints
+  16      bineq(j)            RHS of inequality constraints
+  17      xlb(c)              Lower bound on continuous variables
+  18      xub(c)              Upper bound on continuous variables
+  19      xip(c)              Initial point for local search;
+  20   
+GDXIN   D:\MATLAB\ORPaper_Revision_selected_cases\Feedcase80_2_data.gdx
+--- LOAD  objf = 1:objf
+--- LOAD  Aeq = 7:Aeq
+--- LOAD  Aineq = 8:Aineq
+--- LOAD  beq = 6:beq
+--- LOAD  bineq = 5:bineq
+--- LOAD  xlb = 2:xlb
+--- LOAD  xub = 3:xub
+--- LOAD  xip = 4:xip
+  24   
+  25  Equations
+  26      vapduty             Objective function
+  27      leqcon(i)           Linear equality constraints
+  28      lineqcon(j)         Linear inequality constraints;
+  29   
+  30  vapduty..       mvd =e= sum(c,objf(c)*x(c));
+  31  leqcon(i)..     sum(c,Aeq(i,c)*x(c)) =e= beq(i);
+  32  lineqcon(j)..   sum(c,Aineq(j,c)*x(c)) =l= bineq(j);
+  33   
+      Nonlinear constraints begins 
+      First, Underwood feed equations are imposed followed by minimum vapor 
+      constraints and Distillation constraints 
+  39   
+  40  Equation  nl1;
+  41  * Feed eqn. for [1,1,2,3] & Theta(1)
+  42  nl1..
+  43      +(17.187500*x('c20')/(17.187500-x('c545')))
+  44      +(6.875000*x('c21')/(6.875000-x('c545')))
+  45      +(2.750000*x('c22')/(2.750000-x('c545')))
+  46      -x('c450') =e= 0;
+  47   
+  48  Equation  nl2;
+  49  * Feed eqn. for [1,3,3,4] & Theta(2)
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                 10/10/21 16:06:35 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+  50  nl2..
+  51      +(17.187500*x('c118')/(17.187500-x('c548')))
+  52      +(6.875000*x('c119')/(6.875000-x('c548')))
+  53      +(2.750000*x('c120')/(2.750000-x('c548')))
+  54      +(2.500000*x('c121')/(2.500000-x('c548')))
+  55      -x('c464') =e= 0;
+  56   
+  57  Equation  nl3;
+  58  * Feed eqn. for [1,3,3,4] & Theta(3)
+  59  nl3..
+  60      +(17.187500*x('c118')/(17.187500-x('c549')))
+  61      +(6.875000*x('c119')/(6.875000-x('c549')))
+  62      +(2.750000*x('c120')/(2.750000-x('c549')))
+  63      +(2.500000*x('c121')/(2.500000-x('c549')))
+  64      -x('c464') =e= 0;
+  65   
+  66  Equation  nl4;
+  67  * Feed eqn. for [2,2,3,3] & Theta(2)
+  68  nl4..
+  69      +(6.875000*x('c264')/(6.875000-x('c554')))
+  70      +(2.750000*x('c265')/(2.750000-x('c554')))
+  71      -x('c468') +x('c478') =e= 0;
+  72   
+  73  Equation  nl5;
+  74  * Feed eqn. for [2,3,3,5] & Theta(2)
+  75  nl5..
+  76      +(6.875000*x('c328')/(6.875000-x('c557')))
+  77      +(2.750000*x('c329')/(2.750000-x('c557')))
+  78      +(2.500000*x('c330')/(2.500000-x('c557')))
+  79      +(1.000000*x('c331')/(1.000000-x('c557')))
+  80      +x('c488') =e= 0;
+  81   
+  82  Equation  nl6;
+  83  * Feed eqn. for [2,3,3,5] & Theta(3)
+  84  nl6..
+  85      +(6.875000*x('c328')/(6.875000-x('c558')))
+  86      +(2.750000*x('c329')/(2.750000-x('c558')))
+  87      +(2.500000*x('c330')/(2.500000-x('c558')))
+  88      +(1.000000*x('c331')/(1.000000-x('c558')))
+  89      +x('c488') =e= 0;
+  90   
+  91  Equation  nl7;
+  92  * Feed eqn. for [3,3,4,4] & Theta(3)
+  93  nl7..
+  94      +(2.750000*x('c399')/(2.750000-x('c560')))
+  95      +(2.500000*x('c400')/(2.500000-x('c560')))
+  96      -x('c476') +x('c498') =e= 0;
+  97   
+  98  Equation  nl8;
+  99  * Feed eqn. for [3,4,4,5] & Theta(3)
+ 100  nl8..
+ 101      +(2.750000*x('c423')/(2.750000-x('c561')))
+ 102      +(2.500000*x('c424')/(2.500000-x('c561')))
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                 10/10/21 16:06:35 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+ 103      +(1.000000*x('c425')/(1.000000-x('c561')))
+ 104      +x('c502') =e= 0;
+ 105   
+ 106  Equation  nl9;
+ 107  * Feed eqn. for [3,4,4,5] & Theta(4)
+ 108  nl9..
+ 109      +(2.750000*x('c423')/(2.750000-x('c562')))
+ 110      +(2.500000*x('c424')/(2.500000-x('c562')))
+ 111      +(1.000000*x('c425')/(1.000000-x('c562')))
+ 112      +x('c502') =e= 0;
+ 113   
+ 114  Equation  nl10;
+ 115  * Feed eqn. for [4,4,5,5] & Theta(4)
+ 116  nl10..
+ 117      +(2.500000*x('c446')/(2.500000-x('c563')))
+ 118      +(1.000000*x('c447')/(1.000000-x('c563')))
+ 119      +x('c506') =e= 0;
+ 120   
+      End of Underwood Feed equations.
+      Underwood minimum vapor constraints section begins 
+ 125   
+ 126  Equation  nl11;
+ 127  * Rectifying section equation for [1,1,2,3] & Theta(1)
+ 128  nl11..
+ 129      +(17.187500*x('c17')/(17.187500-x('c545')))
+ 130      -x('c13') =l= 0;
+ 131   
+ 132  Equation  nl12;
+ 133  * Stripping section equation for [1,1,2,3] & Theta(1)
+ 134  nl12..
+ 135      -(6.875000*x('c18')/(6.875000-x('c545')))
+ 136      -(2.750000*x('c19')/(2.750000-x('c545')))
+ 137      -x('c14') =l= 0;
+ 138   
+ 139  Equation  nl13;
+ 140  * Rectifying section equation for [1,3,3,4] & Theta(2)
+ 141  nl13..
+ 142      +(17.187500*x('c113')/(17.187500-x('c548')))
+ 143      +(6.875000*x('c114')/(6.875000-x('c548')))
+ 144      +(2.750000*x('c115')/(2.750000-x('c548')))
+ 145      -x('c109') =l= 0;
+ 146   
+ 147  Equation  nl14;
+ 148  * Stripping section equation for [1,3,3,4] & Theta(2)
+ 149  nl14..
+ 150      -(2.750000*x('c116')/(2.750000-x('c548')))
+ 151      -(2.500000*x('c117')/(2.500000-x('c548')))
+ 152      -x('c110') =l= 0;
+ 153   
+ 154  Equation  nl15;
+ 155  * Rectifying section equation for [1,3,3,4] & Theta(3)
+ 156  nl15..
+ 157      +(17.187500*x('c113')/(17.187500-x('c549')))
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                 10/10/21 16:06:35 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+ 158      +(6.875000*x('c114')/(6.875000-x('c549')))
+ 159      +(2.750000*x('c115')/(2.750000-x('c549')))
+ 160      -x('c109') =l= 0;
+ 161   
+ 162  Equation  nl16;
+ 163  * Stripping section equation for [1,3,3,4] & Theta(3)
+ 164  nl16..
+ 165      -(2.750000*x('c116')/(2.750000-x('c549')))
+ 166      -(2.500000*x('c117')/(2.500000-x('c549')))
+ 167      -x('c110') =l= 0;
+ 168   
+ 169  Equation  nl17;
+ 170  * Rectifying section equation for [2,2,3,3] & Theta(2)
+ 171  nl17..
+ 172      +(6.875000*x('c262')/(6.875000-x('c554')))
+ 173      -x('c258') =l= 0;
+ 174   
+ 175  Equation  nl18;
+ 176  * Stripping section equation for [2,2,3,3] & Theta(2)
+ 177  nl18..
+ 178      -(2.750000*x('c263')/(2.750000-x('c554')))
+ 179      -x('c259') =l= 0;
+ 180   
+ 181  Equation  nl19;
+ 182  * Rectifying section equation for [2,3,3,5] & Theta(2)
+ 183  nl19..
+ 184      +(6.875000*x('c323')/(6.875000-x('c557')))
+ 185      +(2.750000*x('c324')/(2.750000-x('c557')))
+ 186      -x('c319') =l= 0;
+ 187   
+ 188  Equation  nl20;
+ 189  * Stripping section equation for [2,3,3,5] & Theta(2)
+ 190  nl20..
+ 191      -(2.750000*x('c325')/(2.750000-x('c557')))
+ 192      -(2.500000*x('c326')/(2.500000-x('c557')))
+ 193      -(1.000000*x('c327')/(1.000000-x('c557')))
+ 194      -x('c320') =l= 0;
+ 195   
+ 196  Equation  nl21;
+ 197  * Rectifying section equation for [2,3,3,5] & Theta(3)
+ 198  nl21..
+ 199      +(6.875000*x('c323')/(6.875000-x('c558')))
+ 200      +(2.750000*x('c324')/(2.750000-x('c558')))
+ 201      -x('c319') =l= 0;
+ 202   
+ 203  Equation  nl22;
+ 204  * Stripping section equation for [2,3,3,5] & Theta(3)
+ 205  nl22..
+ 206      -(2.750000*x('c325')/(2.750000-x('c558')))
+ 207      -(2.500000*x('c326')/(2.500000-x('c558')))
+ 208      -(1.000000*x('c327')/(1.000000-x('c558')))
+ 209      -x('c320') =l= 0;
+ 210   
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                 10/10/21 16:06:35 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+ 211  Equation  nl23;
+ 212  * Rectifying section equation for [3,3,4,4] & Theta(3)
+ 213  nl23..
+ 214      +(2.750000*x('c397')/(2.750000-x('c560')))
+ 215      -x('c393') =l= 0;
+ 216   
+ 217  Equation  nl24;
+ 218  * Stripping section equation for [3,3,4,4] & Theta(3)
+ 219  nl24..
+ 220      -(2.500000*x('c398')/(2.500000-x('c560')))
+ 221      -x('c394') =l= 0;
+ 222   
+ 223  Equation  nl25;
+ 224  * Rectifying section equation for [3,4,4,5] & Theta(3)
+ 225  nl25..
+ 226      +(2.750000*x('c419')/(2.750000-x('c561')))
+ 227      +(2.500000*x('c420')/(2.500000-x('c561')))
+ 228      -x('c415') =l= 0;
+ 229   
+ 230  Equation  nl26;
+ 231  * Stripping section equation for [3,4,4,5] & Theta(3)
+ 232  nl26..
+ 233      -(2.500000*x('c421')/(2.500000-x('c561')))
+ 234      -(1.000000*x('c422')/(1.000000-x('c561')))
+ 235      -x('c416') =l= 0;
+ 236   
+ 237  Equation  nl27;
+ 238  * Rectifying section equation for [3,4,4,5] & Theta(4)
+ 239  nl27..
+ 240      +(2.750000*x('c419')/(2.750000-x('c562')))
+ 241      +(2.500000*x('c420')/(2.500000-x('c562')))
+ 242      -x('c415') =l= 0;
+ 243   
+ 244  Equation  nl28;
+ 245  * Stripping section equation for [3,4,4,5] & Theta(4)
+ 246  nl28..
+ 247      -(2.500000*x('c421')/(2.500000-x('c562')))
+ 248      -(1.000000*x('c422')/(1.000000-x('c562')))
+ 249      -x('c416') =l= 0;
+ 250   
+ 251  Equation  nl29;
+ 252  * Rectifying section equation for [4,4,5,5] & Theta(4)
+ 253  nl29..
+ 254      +(2.500000*x('c444')/(2.500000-x('c563')))
+ 255      -x('c440') =l= 0;
+ 256   
+ 257  Equation  nl30;
+ 258  * Stripping section equation for [4,4,5,5] & Theta(4)
+ 259  nl30..
+ 260      -(1.000000*x('c445')/(1.000000-x('c563')))
+ 261      -x('c441') =l= 0;
+ 262   
+ 263  Model qp /all/;
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                 10/10/21 16:06:35 Page 6
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+ 264   
+ 265  x.lo(c) = xlb(c); x.up(c) = xub(c); x.l(c) = xip(c);
+ 266  Option nlp=ipopt;
+ 267  Option Reslim = 60;
+ 268  Solve qp minimizing mvd using nlp;
+ 269   
+ 270   
+ 271  Parameter returnStat(stat);
+ 272  returnStat('modelstat') = qp.modelstat;
+ 273  returnStat('solvestat') = qp.solvestat;
+ 274  Execute_unload 'Feedcase80_2_sol', x, mvd, returnStat
+ 275   
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                 10/10/21 16:06:35 Page 7
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Include File Summary
+
+
+   SEQ   GLOBAL TYPE      PARENT   LOCAL  FILENAME
+
+     1        1 INPUT          0       0  D:\MATLAB\ORPaper_Revision_selected_cases\Feedcase80_2.gms
+     2       21 GDXIN          1      21  D:\MATLAB\ORPaper_Revision_selected_cases\Feedcase80_2_data.gdx
+
+
+COMPILATION TIME     =        0.000 SECONDS      3 MB  25.1.1 r66732 WEX-WEI
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                 10/10/21 16:06:35 Page 8
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE qp Using NLP From line 268
+
+
+---- vapduty  =E=  Objective function
+
+vapduty..  - x(c534) - x(c535) - x(c536) - x(c537) - x(c538) - x(c539) - x(c540) - x(c541) - x(c542) - x(c543) + mvd =E= 0 ; (LHS = -9.72056491820834, INFES = 9.72056491820834 ****)
+     
+
+---- leqcon  =E=  Linear equality constraints
+
+leqcon(i1)..  - x(c7) + x(c9) =E= 0 ; (LHS = 0)
+     
+leqcon(i2)..  - x(c8) + x(c10) =E= 0 ; (LHS = 0)
+     
+leqcon(i3)..  x(c1) - x(c5) - x(c7) =E= 0 ; (LHS = 0)
+     
+REMAINING 365 ENTRIES SKIPPED
+
+
+---- lineqcon  =L=  Linear inequality constraints
+
+lineqcon(j1)..  - x(c1) + x(c3) =L= 0 ; (LHS = 0)
+     
+lineqcon(j2)..  - x(c2) + x(c4) =L= 0 ; (LHS = 0)
+     
+lineqcon(j3)..  - x(c11) + x(c13) =L= 0 ; (LHS = -6.95273832441412)
+     
+REMAINING 71 ENTRIES SKIPPED
+
+
+---- nl1  =E=  
+
+nl1..  (1.78297784716362)*x(c20) - (10.2195841623344)*x(c21) - (0.573187980485812)*x(c22) - x(c450) + (1.67805688052728)*x(c545) =E= 0 ; (LHS = -1.92909806570147, INFES = 1.92909806570147 ****)
+     
+
+---- nl2  =E=  
+
+nl2..  (1.33235182049602)*x(c118) + (2.65688035446666)*x(c119) - (1.78875892291463)*x(c120) - (1.39869625637369)*x(c121) - x(c464) + (0.2895517726762)*x(c548) =E= 0 ; (LHS = -0.0934199667886031, INFES = 0.0934199667886031 ****)
+     
+
+---- nl3  =E=  
+
+nl3..  (1.18785308592689)*x(c118) + (1.65388386866781)*x(c119) + (86.2557044144009)*x(c120) - (11.4616832153251)*x(c121) - x(c464) + (44.9541938835117)*x(c549) =E= 0 ; (LHS = -0.0934199667896758, INFES = 0.0934199667896758 ****)
+     
+
+---- nl4  =E=  
+
+nl4..  (68750.0000001602)*x(c264) - (0.666682828674634)*x(c265) - x(c468) + x(c478) + (68750000.0115107)*x(c554) =E= 0 ; (LHS = 6877.42624760059, INFES = 6877.42624760059 ****)
+     
+
+---- nl5  =E=  
+
+nl5..  (2.65688035446666)*x(c328) - (1.78875892291463)*x(c329) - (1.39869625637369)*x(c330) - (0.304193726591739)*x(c331) + x(c488) + (0.6916785959829)*x(c557) =E= 0 ; (LHS = 0.0934199667886078, INFES = 0.0934199667886078 ****)
+     
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                 10/10/21 16:06:35 Page 9
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE qp Using NLP From line 268
+
+
+---- nl6  =E=  
+
+nl6..  (1.65388386866781)*x(c328) + (86.2557044144009)*x(c329) - (11.4616832153251)*x(c330) - (0.582032183193978)*x(c331) + x(c488) + (270.402258001013)*x(c558) =E= 0 ; (LHS = 0.0934199667886089, INFES = 0.0934199667886089 ****)
+     
+
+---- nl7  =E=  
+
+nl7..  (86.2557044144009)*x(c399) - (11.4616832153251)*x(c400) - x(c476) + x(c498) + (89.487223672741)*x(c560) =E= 0 ; (LHS = -0.080079246564021, INFES = 0.080079246564021 ****)
+     
+
+---- nl8  =E=  
+
+nl8..  (86.2557044144009)*x(c423) - (11.4616832153251)*x(c424) - (0.582032183193978)*x(c425) + x(c502) + (121.911611045008)*x(c561) =E= 0 ; (LHS = 0.0118518508626027, INFES = 0.0118518508626027 ****)
+     
+
+---- nl9  =E=  
+
+nl9..  (1.6062424889906)*x(c423) + (1.70990414337191)*x(c424) - (26.3645379528586)*x(c425) + x(c502) + (70.4088500281871)*x(c562) =E= 0 ; (LHS = 4.65786401642657, INFES = 4.65786401642657 ****)
+     
+
+---- nl10  =E=  
+
+nl10..  (1.70990414337191)*x(c446) - (26.3645379528586)*x(c447) + x(c506) + (70.3636956718612)*x(c563) =E= 0 ; (LHS = -1.38666220842649, INFES = 1.38666220842649 ****)
+     
+
+---- nl11  =L=  
+
+nl11..  - x(c13) + (1.78297784716362)*x(c17) + (0.157216494717369)*x(c545) =L= 0 ; (LHS = -1.07118494888442)
+     
+
+---- nl12  =L=  
+
+nl12..  - x(c14) + (10.2195841623344)*x(c18) + (0.573187980485812)*x(c19) - (1.52084038580991)*x(c545) =L= 0 ; (LHS = 0.857913116817049, INFES = 0.857913116817049 ****)
+     
+
+---- nl13  =L=  
+
+nl13..  - x(c109) + (1.33235182049602)*x(c113) + (2.65688035446666)*x(c114) - (1.78875892291463)*x(c115) + (0.207164276991404)*x(c548) =L= 0 ; (LHS = -1.04192877036272)
+     
+
+---- nl14  =L=  
+
+nl14..  - x(c110) + (1.78875892291463)*x(c116) + (1.39869625637369)*x(c117) - (0.0823874956847957)*x(c548) =L= 0 ; (LHS = -0.948508803574116)
+     
+
+---- nl15  =L=  
+
+nl15..  - x(c109) + (1.18785308592689)*x(c113) + (1.65388386866781)*x(c114) + (86.2557044144009)*x(c115) + (38.9366226390229)*x(c549) =L= 0 ; (LHS = -0.00149908278946054)
+     
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                10/10/21 16:06:35 Page 10
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE qp Using NLP From line 268
+
+
+---- nl16  =L=  
+
+nl16..  - x(c110) - (86.2557044144009)*x(c116) + (11.4616832153251)*x(c117) - (6.01757124448882)*x(c549) =L= 0 ; (LHS = 0.0919208840002161, INFES = 0.0919208840002161 ****)
+     
+
+---- nl17  =L=  
+
+nl17..  - x(c258) + (68750.0000001602)*x(c262) + (68750000.0003204)*x(c554) =L= 0 ; (LHS = 6874.8188895412, INFES = 6874.8188895412 ****)
+     
+
+---- nl18  =L=  
+
+nl18..  - x(c259) + (0.666682828674634)*x(c263) - (0.0111902994828559)*x(c554) =L= 0 ; (LHS = -2.60735805938753)
+     
+
+---- nl19  =L=  
+
+nl19..  - x(c319) + (2.65688035446666)*x(c323) - (1.78875892291463)*x(c324) + (0.0638597293123878)*x(c557) =L= 0 ; (LHS = -4.75077976286101)
+     
+
+---- nl20  =L=  
+
+nl20..  - x(c320) + (1.78875892291463)*x(c325) + (1.39869625637369)*x(c326) + (0.304193726591739)*x(c327) - (0.627818866670512)*x(c557) =L= 0 ; (LHS = -4.84419972964962)
+     
+
+---- nl21  =L=  
+
+nl21..  - x(c319) + (1.65388386866781)*x(c323) + (86.2557044144009)*x(c324) + (148.490646956004)*x(c558) =L= 0 ; (LHS = 0.0815681159260073, INFES = 0.0815681159260073 ****)
+     
+
+---- nl22  =L=  
+
+nl22..  - x(c320) - (86.2557044144009)*x(c325) + (11.4616832153251)*x(c326) + (0.582032183193978)*x(c327) - (121.911611045008)*x(c558) =L= 0 ; (LHS = -0.0118518508626027)
+     
+
+---- nl23  =L=  
+
+nl23..  - x(c393) + (86.2557044144009)*x(c397) + (83.2294442195965)*x(c560) =L= 0 ; (LHS = 0)
+     
+
+---- nl24  =L=  
+
+nl24..  - x(c394) + (11.4616832153251)*x(c398) - (6.25777945314449)*x(c560) =L= 0 ; (LHS = 0.0800792465640219, INFES = 0.0800792465640219 ****)
+     
+
+---- nl25  =L=  
+
+nl25..  - x(c415) + (86.2557044144009)*x(c419) - (11.4616832153251)*x(c420) + (83.4696524282471)*x(c561) =L= 0 ; (LHS = 0.0118416374360106, INFES = 0.0118416374360106 ****)
+     
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                10/10/21 16:06:35 Page 11
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE qp Using NLP From line 268
+
+
+---- nl26  =L=  
+
+nl26..  - x(c416) + (11.4616832153251)*x(c421) + (0.582032183193978)*x(c422) - (38.4419586167613)*x(c561) =L= 0 ; (LHS = -1.02134265933529E-5)
+     
+
+---- nl27  =L=  
+
+nl27..  - x(c415) + (1.6062424889906)*x(c419) + (1.70990414337191)*x(c420) + (0.0451543563259527)*x(c562) =L= 0 ; (LHS = -2.39118328425342)
+     
+
+---- nl28  =L=  
+
+nl28..  - x(c416) - (1.70990414337191)*x(c421) + (26.3645379528586)*x(c422) - (70.3636956718612)*x(c562) =L= 0 ; (LHS = -7.04904730067999)
+     
+
+---- nl29  =L=  
+
+nl29..  - x(c440) + (1.70990414337191)*x(c444) + (0.854809525088879)*x(c563) =L= 0 ; (LHS = -0.0350638222424866)
+     
+
+---- nl30  =L=  
+
+nl30..  - x(c441) + (26.3645379528586)*x(c445) - (69.5088861467723)*x(c563) =L= 0 ; (LHS = 1.351598386184, INFES = 1.351598386184 ****)
+     
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                10/10/21 16:06:35 Page 12
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE qp Using NLP From line 268
+
+
+---- x  List of continuous variables
+
+x(c1)
+                (.LO, .L, .UP, .M = 0, 0, 0, 0)
+        1       leqcon(i3)
+       -1       leqcon(i5)
+        1       leqcon(i304)
+       -1       lineqcon(j1)
+
+x(c2)
+                (.LO, .L, .UP, .M = 0, 0, 0, 0)
+       -1       leqcon(i4)
+        1       leqcon(i5)
+        1       leqcon(i312)
+       -1       lineqcon(j2)
+
+x(c3)
+                (.LO, .L, .UP, .M = 0, 0, 0, 0)
+       -1       leqcon(i330)
+        1       lineqcon(j1)
+
+REMAINING 550 ENTRIES SKIPPED
+
+---- mvd  Objective function -- Minimum vapor duty
+
+mvd
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       vapduty
+
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                10/10/21 16:06:35 Page 13
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE qp Using NLP From line 268
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS          33     SINGLE EQUATIONS          473
+BLOCKS OF VARIABLES           2     SINGLE VARIABLES          554  1 projected
+NON ZERO ELEMENTS         1,609     NON LINEAR N-Z             98
+DERIVATIVE POOL              20     CONSTANT POOL              20
+CODE LENGTH                 439
+
+
+GENERATION TIME      =        0.015 SECONDS      4 MB  25.1.1 r66732 WEX-WEI
+
+
+EXECUTION TIME       =        0.015 SECONDS      4 MB  25.1.1 r66732 WEX-WEI
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                10/10/21 16:06:35 Page 14
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE qp Using NLP From line 268
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   qp                  OBJECTIVE  mvd
+     TYPE    NLP                 DIRECTION  MINIMIZE
+     SOLVER  IPOPT               FROM LINE  268
+
+**** SOLVER STATUS     1 Normal Completion         
+**** MODEL STATUS      2 Locally Optimal           
+**** OBJECTIVE VALUE                9.8006
+
+ RESOURCE USAGE, LIMIT          0.094        60.000
+ ITERATION COUNT, LIMIT        17    2000000000
+ EVALUATION ERRORS              0             0
+
+COIN-OR Ipopt    25.1.1 r66732 Released May 19, 2018 WEI x86 64bit/MS Windows 
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- EQU vapduty             .              .              .             1.0000      
+
+  vapduty  Objective function
+
+---- EQU leqcon  Linear equality constraints
+
+            LOWER          LEVEL          UPPER         MARGINAL
+
+i1            .              .              .             0.0115      
+i2            .              .              .            -0.0002      
+i3            .              .              .            -3.7677      
+i4            .              .              .             0.0772      
+i5            .              .              .            -0.1487      
+i6            .              .              .            -0.0322      
+i7            .              .              .           518.1611      
+i8            .              .              .         -1258.2116      
+i9            .              .              .          -156.1372      
+i10           .              .              .         -1364.0151      
+i11           .              .              .           156.1372      
+i12           .              .              .       5.3237531E-9      
+i13           .              .              .          -156.1372      
+i14           .              .              .            -0.2788      
+i15           .              .              .            -2.6157      
+i16           .              .              .            -0.0075      
+i17           .              .              .            -1.7942      
+i18           .              .              .             1.2858      
+i19           .              .              .            -0.7634      
+i20           .              .              .             0.3251      
+i21           .              .              .            -0.2788      
+i22           .              .              .            -1.2841      
+i23           .              .              .            -0.0106      
+i24           .              .              .            -1.7973      
+i25           .              .              .             2.6059      
+i26           .              .              .            -0.7562      
+i27           .              .              .             0.3247      
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                10/10/21 16:06:35 Page 15
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE qp Using NLP From line 268
+
+
+     EQU leqcon  Linear equality constraints
+
+            LOWER          LEVEL          UPPER         MARGINAL
+
+i28           .              .              .            -1.9041      
+i29           .              .              .            -1.5582      
+i30           .              .              .            -0.3005      
+i31           .              .              .             0.0079      
+i32           .              .              .            -3.7604      
+i33           .              .              .             1.8023      
+i34           .              .              .             0.0271      
+i35           .              .              .             3.0952      
+i36           .              .              .            -1.9105      
+i37           .              .              .            -1.5477      
+i38           .              .              .            -0.3005      
+i39           .              .              .             0.0079      
+i40           .              .              .            -1.7871      
+i41           .              .              .             1.8021      
+i42           .              .              .            -0.3190      
+i43           .              .              .             3.0963      
+i44           .              .              .            -1.9105      
+i45           .              .              .            -1.5472      
+i46           .              .              .            -0.4786      
+i47           .              .              .             0.0089      
+i48           .              .              .            -1.7866      
+i49           .              .              .             1.9243      
+i50           .              .              .            -0.2510      
+i51           .              .              .             3.0948      
+i52           .              .              .            -2.1949      
+i53           .              .              .            -2.8470      
+i54           .              .              .            -0.2932      
+i55           .              .              .             0.0079      
+i56           .              .              .            -2.5896      
+i57           .              .              .             1.8045      
+i58           .              .              .            -0.4421      
+i59           .              .              .             3.0980      
+i60           .              .              .         -1048.0640      
+i61           .              .              .         -1258.2927      
+i62           .              .              .          -160.3646      
+i63           .              .              .          -131.3272      
+i64           .              .              .           156.1372      
+i65           .              .              .           130.7634      
+i66           .              .              .             0.0491      
+i67           .              .              .          -131.6624      
+i68           .              .              .            -2.1949      
+i69           .              .              .            -2.8493      
+i70           .              .              .            -0.2898      
+i71           .              .              .             0.0034      
+i72           .              .              .            -2.5906      
+i73           .              .              .             2.6241      
+i74           .              .              .            -0.6609      
+i75           .              .              .             3.0995      
+i76           .              .              .           -69.4830      
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                10/10/21 16:06:35 Page 16
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE qp Using NLP From line 268
+
+
+     EQU leqcon  Linear equality constraints
+
+            LOWER          LEVEL          UPPER         MARGINAL
+
+i77           .              .              .          -156.1372      
+i78           .              .              .         -1129.2962      
+i79           .              .              .           156.1372      
+i80           .              .              .       3.3992885E-9      
+i81           .              .              .          -156.1372      
+i82           .              .              .             0.0110      
+i83           .              .              .            -0.1834      
+i84           .              .              .            -0.0044      
+i85           .              .              .            -3.6019      
+i86           .              .              .             1.9217      
+i87           .              .              .             0.3569      
+i88           .              .              .            -0.0044      
+i89           .              .              .            -1.3296      
+i90           .              .              .            -0.1777      
+i91           .              .              .            -0.0044      
+i92           .              .              .            -2.3217      
+i93           .              .              .             1.9210      
+i94           .              .              .            -0.0923      
+i95           .              .              .            -0.0032      
+i96           .              .              .            -1.3296      
+i97           .              .              .             0.0050      
+i98           .              .              .            -0.0099      
+i99           .              .              .            -2.3240      
+i100          .              .              .             2.6232      
+i101          .              .              .            -0.3765      
+i102          .              .              .             0.0023      
+i103          .              .              .             1.1705      
+i104          .              .              .             3.1232      
+i105          .              .              .             2.4388      
+i106          .              .              .            -0.0424      
+i107          .              .              .            -3.6055      
+i108          .              .              .             4.6933      
+i109          .              .              .            -1.4880      
+i110          .              .              .            -8.2158      
+i111          .              .              .         -1258.4128      
+i112          .              .              .          -166.6273      
+i113          .              .              .          -130.4950      
+i114          .              .              .         -1076.5896      
+i115          .              .              .           156.1372      
+i116          .              .              .           358.3164      
+i117          .              .              .             0.1222      
+i118          .              .              .         -1822.9427      
+i119          .              .              .            -0.1700      
+i120          .              .              .             1.8973      
+i121          .              .              .             0.1070      
+i122          .              .              .            -0.0197      
+i123          .              .              .            -2.3301      
+i124          .              .              .            -1.5996      
+i125          .              .              .            -1.5099      
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                10/10/21 16:06:35 Page 17
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE qp Using NLP From line 268
+
+
+     EQU leqcon  Linear equality constraints
+
+            LOWER          LEVEL          UPPER         MARGINAL
+
+i126          .              .              .            -8.2198      
+i127          .              .              .             1.1649      
+i128          .              .              .             3.1148      
+i129          .              .              .             2.4370      
+i130          .              .              .            -0.0424      
+i131          .              .              .            -1.8187      
+i132          .              .              .             4.6933      
+i133          .              .              .            -1.7797      
+i134          .              .              .            -8.2157      
+i135          .              .              .             1.1648      
+i136          .              .              .             1.8980      
+i137          .              .              .             0.1129      
+i138          .              .              .            -0.0197      
+i139          .              .              .            -1.8041      
+i140          .              .              .            -1.5990      
+i141          .              .              .            -1.3489      
+i142          .              .              .            -8.2201      
+i143          .              .              .             1.1648      
+i144          .              .              .             1.8980      
+i145          .              .              .             1.7510      
+i146          .              .              .            -0.0158      
+i147          .              .              .            -1.8097      
+i148          .              .              .            -3.2748      
+i149          .              .              .             1.3832      
+i150          .              .              .            -8.2192      
+i151          .              .              .          -198.9452      
+i152          .              .              .          -126.2006      
+i153          .              .              .           156.1372      
+i154          .              .              .           120.4273      
+i155          .              .              .             0.5000      
+i156          .              .              .          -130.7634      
+i157          .              .              .             1.2299      
+i158          .              .              .            -0.9468      
+i159          .              .              .            -0.0082      
+i160          .              .              .            -1.0117      
+i161          .              .              .            -1.5989      
+i162          .              .              .            -0.6974      
+i163          .              .              .            -3.7373      
+i164          .              .              .          -203.2038      
+i165          .              .              .          -125.6347      
+i166          .              .              .           294.4185      
+i167          .              .              .           130.7634      
+i168          .              .              .          -958.2248      
+i169          .              .              .             0.5491      
+i170          .              .              .          -358.3164      
+i171          .              .              .             1.0553      
+i172          .              .              .             0.6982      
+i173          .              .              .            -0.0042      
+i174          .              .              .            -1.6873      
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                10/10/21 16:06:35 Page 18
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE qp Using NLP From line 268
+
+
+     EQU leqcon  Linear equality constraints
+
+            LOWER          LEVEL          UPPER         MARGINAL
+
+i175          .              .              .            -3.2740      
+i176          .              .              .             2.2489      
+i177          .              .              .            -3.7387      
+i178          .              .              .          -120.4273      
+i179          .              .              .          1808.9143      
+i180          .              .              .           120.4273      
+i181          .              .              .         -2773.5044      
+i182          .              .              .             1.0000      
+i183          .              .              .           958.2248      
+i184          .              .              .            -0.0117      
+i185          .              .              .            -1.1625      
+i186          .              .              .            -1.8992      
+i187          .              .              .            -1.7509      
+i188          .              .              .             0.0271      
+i189          .              .              .            -3.7676      
+i190          .              .              .             8.6890      
+i191          .              .              .             0.0210      
+i192          .              .              .            -0.0054      
+i193          .              .              .            -1.1646      
+i194          .              .              .            -1.8992      
+i195          .              .              .            -1.7509      
+i196          .              .              .             0.0271      
+i197          .              .              .            -1.8026      
+i198          .              .              .             8.6889      
+i199          .              .              .             0.3681      
+i200          .              .              .            -0.0054      
+i201          .              .              .            -0.0055      
+i202          .              .              .            -1.2330      
+i203          .              .              .            -0.6915      
+i204          .              .              .             0.0171      
+i205          .              .              .            -1.7993      
+i206          .              .              .             4.7021      
+i207          .              .              .             0.0683      
+i208          .              .              .             0.2782      
+i209          .              .              .             0.1296      
+i210          .              .              .            -1.8977      
+i211          .              .              .            -1.7509      
+i212          .              .              .             0.0271      
+i213          .              .              .            -2.6062      
+i214          .              .              .             8.6885      
+i215          .              .              .             0.4920      
+i216          .              .              .             0.2782      
+i217          .              .              .             1.2917      
+i218          .              .              .            -1.2310      
+i219          .              .              .            -0.6915      
+i220          .              .              .             0.0171      
+i221          .              .              .            -2.6063      
+i222          .              .              .             4.7017      
+i223          .              .              .             0.1922      
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                10/10/21 16:06:35 Page 19
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE qp Using NLP From line 268
+
+
+     EQU leqcon  Linear equality constraints
+
+            LOWER          LEVEL          UPPER         MARGINAL
+
+i224          .              .              .             0.2783      
+i225          .              .              .             1.2918      
+i226          .              .              .            -0.0053      
+i227          .              .              .             1.6445      
+i228          .              .              .            -0.0058      
+i229          .              .              .            -2.5993      
+i230          .              .              .            -1.5985      
+i231          .              .              .            -0.2381      
+i232         0.8500         0.8500         0.8500      2885.7126      
+i233         0.1000         0.1000         0.1000        45.7452      
+i234         0.1000         0.1000         0.1000       107.6057      
+i235         0.8500         0.8500         0.8500       875.0195      
+i236         0.1000         0.1000         0.1000      3910.0277      
+i237          .              .              .           131.6624      
+i238          .              .              .          1822.9427      
+i239          .              .              .            -0.0886      
+i240          .              .              .             1.9222      
+i241          .              .              .             1.5570      
+i242          .              .              .            -0.9370      
+i243          .              .              .            -0.7097      
+i244          .              .              .             0.0171      
+i245          .              .              .            -5.3250      
+i246          .              .              .             4.7046      
+i247          .              .              .            -0.0379      
+i248          .              .              .             1.9222      
+i249          .              .              .             1.5571      
+i250          .              .              .             0.2906      
+i251          .              .              .             1.6186      
+i252          .              .              .            -0.0058      
+i253          .              .              .            -5.3103      
+i254          .              .              .            -1.5973      
+i255          .              .              .            -0.4682      
+i256          .              .              .             1.9222      
+i257          .              .              .             1.5571      
+i258          .              .              .             0.2905      
+i259          .              .              .            -0.0200      
+i260          .              .              .            -0.0097      
+i261          .              .              .            -5.3159      
+i262          .              .              .            -3.2735      
+i263          .              .              .            -3.2003      
+i264          .              .              .            -0.0460      
+i265          .              .              .           -98.5236      
+i266          .              .              .         -1102.0745      
+i267          .              .              .         -1848.4854      
+i268          .              .              .         -1126.5819      
+i269          .              .              .           -26.1797      
+i270          .              .              .         -1102.0745      
+i271          .              .              .            -0.0136      
+i272          .              .              .             0.0192      
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                10/10/21 16:06:35 Page 20
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE qp Using NLP From line 268
+
+
+     EQU leqcon  Linear equality constraints
+
+            LOWER          LEVEL          UPPER         MARGINAL
+
+i273          .              .              .           564.4706      
+i274          .              .              .          1653.2227      
+i275          .              .              .          1692.8586      
+i276          .              .              .           -33.8447      
+i277          .              .              .           181.0912      
+i278          .              .              .           229.2296      
+i279          .              .              .         -1078.6521      
+i280          .              .              .           -10.8287      
+i281          .              .              .             0.0002      
+i282          .              .              .          -156.1372      
+i283          .              .              .           156.1372      
+i284          .              .              .          -131.6427      
+i285          .              .              .           131.6624      
+i286          .              .              .          -156.1372      
+i287          .              .              .           156.1372      
+i288          .              .              .            -5.3841      
+i289          .              .              .            -0.0002      
+i290          .              .              .          -130.6652      
+i291          .              .              .           130.7634      
+i292          .              .              .          -156.1372      
+i293          .              .              .           156.1372      
+i294          .              .              .             0.0070      
+i295          .              .              .            -5.3767      
+i296          .              .              .         -1822.9427      
+i297          .              .              .          1822.7852      
+i298          .              .              .          -130.7634      
+i299          .              .              .           130.6652      
+i300          .              .              .          -358.3164      
+i301          .              .              .           358.0719      
+i302          .              .              .           958.2248      
+i303          .              .              .          -959.2248      
+i304          .              .              .          1364.0151      
+i305          .              .              .         -1364.0151      
+i306          .              .              .          1129.2962      
+i307          .              .              .         -1129.2962      
+i308          .              .              .          -156.1372      
+i309          .              .              .           156.1372      
+i310          .              .              .          -119.4273      
+i311          .              .              .           120.4273      
+i312          .              .              .          2153.3897      
+i313          .              .              .          3631.0624      
+i314          .              .              .           156.1372      
+i315          .              .              .          -156.1372      
+i316          .              .              .           119.4273      
+i317          .              .              .          -120.4273      
+i318          .              .              .         -2774.5044      
+i319          .              .              .          2773.5044      
+i320          .              .              .          -368.5872      
+i321         0.1000         0.1000         0.1000      2169.7560      
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                10/10/21 16:06:35 Page 21
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE qp Using NLP From line 268
+
+
+     EQU leqcon  Linear equality constraints
+
+            LOWER          LEVEL          UPPER         MARGINAL
+
+i322          .              .              .          -156.1372      
+i323         0.1000         0.1000         0.1000      -156.1372      
+i324          .              .              .          -119.4273      
+i325         0.8500         0.8500         0.8500      -120.4273      
+i326          .              .              .         -1595.8180      
+i327         0.8500         0.8500         0.8500      2872.3872      
+i328          .              .              .             1.9942      
+i329         0.1000         0.1000         0.1000      2773.5044      
+i330          .              .              .            -0.0326      
+i331          .              .              .       -5.65830E-10      
+i332          .              .              .            -0.6014      
+i333          .              .              .            -0.6015      
+i334          .              .              .            -0.3193      
+i335          .              .              .            -0.3184      
+i336          .              .              .            -0.3191      
+i337          .              .              .            -0.3176      
+i338          .              .              .       -9.251784E-5      
+i339          .              .              .            -0.3161      
+i340          .              .              .       9.222640E-11      
+i341          .              .              .            -0.0037      
+i342          .              .              .             0.0006      
+i343          .              .              .             0.0055      
+i344          .              .              .            -1.7120      
+i345          .              .              .            -0.0006      
+i346          .              .              .            -1.7111      
+i347          .              .              .            -1.7120      
+i348          .              .              .            -1.7117      
+i349          .              .              .            -1.7117      
+i350          .              .              .            -0.0037      
+i351          .              .              .            -0.9063      
+i352          .              .              .            -0.0034      
+i353          .              .              .            -0.9110      
+i354          .              .              .       -1.56066E-11      
+i355          .              .              .       2.3648948E-5      
+i356          .              .              .             0.0001      
+i357          .              .              .       2.4254314E-5      
+i358          .              .              .             0.0001      
+i359          .              .              .       3.5320752E-5      
+i360          .              .              .       -7.379047E-5      
+i361          .              .              .           460.1751      
+i362          .              .              .       3.3571762E-5      
+i363          .              .              .       -7.552820E-5      
+i364          .              .              .            -0.0004      
+i365          .              .              .           450.1879      
+i366          .              .              .          -450.1879      
+i367          .              .              .             9.9183      
+i368          .              .              .           -10.0561      
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                10/10/21 16:06:35 Page 22
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE qp Using NLP From line 268
+
+
+---- EQU lineqcon  Linear inequality constraints
+
+           LOWER          LEVEL          UPPER         MARGINAL
+
+j1         -INF             .              .         -1997.2191      
+j2         -INF             .              .         -1997.0598      
+j3         -INF           -1.1501          .       -3.661412E-9      
+j4         -INF           -1.1501          .       -3.661412E-9      
+j5         -INF             .              .         -1997.5541      
+j6         -INF             .              .         -1997.5073      
+j7         -INF             .              .         -1997.5541      
+j8         -INF             .              .         -1997.5075      
+j9         -INF             .              .         -1997.2192      
+j10        -INF             .              .         -1997.5532      
+j11        -INF             .              .         -1997.5541      
+j12        -INF             .              .         -1997.5533      
+j13        -INF             .              .         -1997.5541      
+j14        -INF             .              .         -1997.5147      
+j15        -INF             .              .         -1997.6009      
+j16        -INF             .              .         -1997.5534      
+j17        -INF      -8.358753E-8          .            -0.0491      
+j18        -INF      -8.358752E-8          .            -0.0491      
+j19        -INF             .              .         -1997.6009      
+j20        -INF             .              .         -1997.5177      
+j21        -INF             .              .         -1997.2191      
+j22        -INF             .              .         -1997.1244      
+j23        -INF             .              .         -1997.5540      
+j24        -INF             .              .         -1997.1245      
+j25        -INF             .              .         -1997.5541      
+j26        -INF             .              .         -1997.4525      
+j27        -INF             .              .         -1997.6008      
+j28        -INF             .              .         -1997.1245      
+j29        -INF             .              .         -1997.6009      
+j30        -INF             .              .         -1997.4525      
+j31        -INF             .              .         -1997.6010      
+j32        -INF             .              .         -1997.9255      
+j33        -INF      -5.953962E-8          .            -0.0689      
+j34        -INF      -5.959666E-8          .            -0.0688      
+j35        -INF             .              .         -1997.5935      
+j36        -INF             .              .         -1997.4524      
+j37        -INF             .              .         -1997.5936      
+j38        -INF             .              .         -1997.9254      
+j39        -INF             .              .         -1997.5940      
+j40        -INF             .              .         -2000.6834      
+j41        -INF           -1.5725          .       -2.385481E-9      
+j42        -INF           -1.5725          .       -2.385481E-9      
+j43        -INF             .              .         -1997.2699      
+j44        -INF             .              .         -1997.5146      
+j45        -INF             .              .         -1997.6010      
+j46        -INF             .              .         -1997.5147      
+j47        -INF             .              .         -1997.6009      
+j48        -INF             .              .         -1997.5177      
+j49        -INF             .              .         -1997.2700      
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                10/10/21 16:06:35 Page 23
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE qp Using NLP From line 268
+
+
+     EQU lineqcon  Linear inequality constraints
+
+           LOWER          LEVEL          UPPER         MARGINAL
+
+j50        -INF             .              .         -1997.4523      
+j51        -INF      -3.347271E-8          .            -0.1222      
+j52        -INF      -3.347266E-8          .            -0.1222      
+j53        -INF             .              .         -1997.6010      
+j54        -INF             .              .         -1997.9258      
+j55        -INF             .              .         -1997.5533      
+j56        -INF             .              .         -1997.4524      
+j57        -INF             .              .         -1997.5534      
+j58        -INF             .              .         -1997.9258      
+j59        -INF             .              .         -1997.5537      
+j60        -INF             .              .         -2000.6841      
+j61        -INF             .              .            -0.5000      
+j62        -INF             .              .            -0.5000      
+j63        -INF             .              .         -1997.6009      
+j64        -INF             .              .         -1997.9257      
+j65        -INF             .              .            -0.4509      
+j66        -INF             .              .            -0.4509      
+j67        -INF             .              .         -1997.5931      
+j68        -INF             .              .         -2000.6838      
+j69        -INF           -0.9756          .       -4.046187E-9      
+j70        -INF           -0.9756          .       -4.046187E-9      
+j71        -INF           -0.4474          .       -8.694989E-9      
+j72        -INF           -0.4474          .       -8.694999E-9      
+j73        -INF           -0.0365          .       -1.126729E-7      
+j74        -INF           -0.0365          .       -1.126729E-7      
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- EQU nl1                 .              .              .       7.290763E-10      
+---- EQU nl2                 .              .              .       -2.245988E-9      
+---- EQU nl3                 .              .              .             0.0292      
+---- EQU nl4                 .       -3.499273E-6          .       -9.476177E-9      
+---- EQU nl5                 .              .              .       -2.593515E-9      
+---- EQU nl6                 .              .              .            -0.0359      
+---- EQU nl7                 .              .              .             0.3981      
+---- EQU nl8                 .              .              .             0.3012      
+---- EQU nl9                 .              .              .       -3.195187E-9      
+---- EQU nl10                .              .              .       -5.992795E-9      
+---- EQU nl11              -INF           -1.7362          .       -2.414124E-9      
+---- EQU nl12              -INF           -1.7362          .       -2.414129E-9      
+---- EQU nl13              -INF           -0.7386          .       -5.695293E-9      
+---- EQU nl14              -INF           -0.7386          .       -5.695286E-9      
+---- EQU nl15              -INF      -8.447083E-8          .            -0.0490      
+---- EQU nl16              -INF      -8.281558E-8          .            -0.0492      
+---- EQU nl17              -INF           -2.8883          .       -1.422427E-9      
+---- EQU nl18              -INF           -2.8883          .       -1.370483E-9      
+---- EQU nl19              -INF           -3.2062          .       -1.439151E-9      
+---- EQU nl20              -INF           -3.2062          .       -1.439145E-9      
+---- EQU nl21              -INF      -3.410090E-8          .            -0.1216      
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                10/10/21 16:06:35 Page 24
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE qp Using NLP From line 268
+
+
+---- EQU nl22              -INF      -3.290855E-8          .            -0.1229      
+---- EQU nl23              -INF             .              .            -0.4963      
+---- EQU nl24              -INF             .              .            -0.5037      
+---- EQU nl25              -INF             .              .            -0.4475      
+---- EQU nl26              -INF             .              .            -0.4543      
+---- EQU nl27              -INF           -1.5742          .       -2.494513E-9      
+---- EQU nl28              -INF           -1.5742          .       -2.494510E-9      
+---- EQU nl29              -INF           -1.4174          .       -2.775493E-9      
+---- EQU nl30              -INF           -1.4174          .       -2.775491E-9      
+
+---- VAR x  List of continuous variables
+
+            LOWER          LEVEL          UPPER         MARGINAL
+
+c1            .              .              .         -3357.6152      
+c2            .              .              .         -4150.2236      
+c3            .              .              .          1997.1865      
+c4            .              .              .          1997.0924      
+c5            .              .              .          1360.2474      
+c6            .              .              .         -3631.1395      
+c7            .              .              .            -3.7562      
+c8            .              .              .             0.0769      
+c9            .              .              .            -0.0897      
+c10           .              .              .            -0.0320      
+c11           .             5.0678        14.6010   3.797370E-10      
+c12           .             3.0259        13.7510   9.746780E-10      
+c13           .             3.9176        14.6010   6.641338E-10      
+c14           .             1.8758        13.7510   1.8442825E-9      
+c15           .             4.2178        14.6010   5.783943E-10      
+c16           .             3.1079        13.9510   9.430220E-10      
+c17           .             0.8500         0.8500      -845.8540      
+c18           .             0.0714         0.1000   -8.613833E-8      
+c19           .             0.0106         0.1000   3.4172240E-7      
+c20           .             0.8500         0.8500      -772.8219      
+c21           .             0.0714         0.1000   -8.613833E-8      
+c22           .             0.0106         0.1000   3.4172240E-7      
+c23           .              .              .         -1985.6946      
+c24           .              .              .         -2151.5953      
+c25           .              .              .          1996.9526      
+c26           .              .              .          1998.1087      
+c27           .              .              .            -1.7944      
+c28           .              .              .           154.8514      
+c29           .              .              .            -2.0270      
+c30           .              .              .            -4.4099      
+c31           .              .              .          1100.7445      
+c32           .              .              .             1.2782      
+c33           .              .              .           -97.9197      
+c34           .              .              .         -1099.1336      
+c35           .              .              .             0.3327      
+c36           .              .              .         -1985.6843      
+c37           .              .              .         -2150.2825      
+c38           .              .              .          1996.9526      
+c39           .              .              .          1998.1089      
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                10/10/21 16:06:35 Page 25
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE qp Using NLP From line 268
+
+
+     VAR x  List of continuous variables
+
+            LOWER          LEVEL          UPPER         MARGINAL
+
+c40           .              .              .            -1.7975      
+c41           .              .              .           153.5313      
+c42           .              .              .            -2.0300      
+c43           .              .              .            -3.0814      
+c44           .              .              .             2.5953      
+c45           .              .              .           -97.9202      
+c46           .              .              .         -1100.4656      
+c47           .              .              .             0.3353      
+c48           .              .              .         -3357.4468      
+c49           .              .              .         -1990.4013      
+c50           .              .              .          1996.8998      
+c51           .              .              .          1997.8726      
+c52           .              .              .          1360.2547      
+c53           .              .              .            -1.8093      
+c54           .              .              .            -5.6645      
+c55           .              .              .             0.2577      
+c56           .              .              .             1.4826      
+c57           .              .              .             1.8102      
+c58           .              .              .         -1843.4861      
+c59           .              .              .         -1121.9285      
+c60           .              .              .           -22.7840      
+c61           .              .              .             3.0874      
+c62           .              .              .         -1985.2573      
+c63           .              .              .         -1990.0555      
+c64           .              .              .          1997.2357      
+c65           .              .              .          1997.8717      
+c66           .              .              .            -1.7874      
+c67           .              .              .            -1.8092      
+c68           .              .              .            -3.6516      
+c69           .              .              .            -3.3349      
+c70           .              .              .             0.2680      
+c71           .              .              .             1.4825      
+c72           .              .              .             1.8100      
+c73           .              .              .         -1843.4786      
+c74           .              .              .         -1121.9379      
+c75           .              .              .           -22.7829      
+c76           .              .              .             3.0884      
+c77           .              .              .         -1985.1899      
+c78           .              .              .         -2126.0045      
+c79           .              .              .          1997.2350      
+c80           .              .              .          1997.8338      
+c81           .              .              .            -1.7868      
+c82           .              .              .           128.8390      
+c83           .              .              .            -3.6511      
+c84           .              .              .            -3.3338      
+c85           .              .              .            35.2904      
+c86           .              .              .             1.9333      
+c87           .              .              .         -1843.4802      
+c88           .              .              .         -1121.9399      
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                10/10/21 16:06:35 Page 26
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE qp Using NLP From line 268
+
+
+     VAR x  List of continuous variables
+
+            LOWER          LEVEL          UPPER         MARGINAL
+
+c89           .              .              .           -22.6063      
+c90           .              .              .             3.0858      
+c91           .              .              .         -1839.3163      
+c92           .              .              .         -1989.9300      
+c93           .              .              .          1997.2833      
+c94           .              .              .          1997.8710      
+c95           .              .              .          -158.7268      
+c96           .              .              .            -1.8115      
+c97           .              .              .            93.7391      
+c98           .              .              .          1096.6378      
+c99           .              .              .            -2.8828      
+c100          .              .              .            -1.0289      
+c101          .              .              .             1.4922      
+c102          .              .              .             1.8124      
+c103          .              .              .         -1843.1926      
+c104          .              .              .         -1120.6369      
+c105          .              .              .           -22.7886      
+c106          .              .              .             3.0901      
+c107          .             2.0419        14.7010   1.6875382E-9      
+c108          .             0.8563        13.6510   4.4766874E-9      
+c109          .             2.0419        14.7010   1.6875357E-9      
+c110          .             0.8563        13.6510   4.4766739E-9      
+c111          .             1.1099        14.7010   3.3994458E-9      
+c112          .             0.9402        14.6010   4.0691164E-9      
+c113          .             0.8500         0.8500      -793.3450      
+c114          .             0.0714         0.1000   -8.613833E-8      
+c115          .             0.0106         0.1000   3.4172242E-7      
+c116          .             0.0011         0.1000   3.7884171E-6      
+c117          .             0.0828         0.8500   4.4273128E-8      
+c118          .             0.8500         0.8500      -932.1185      
+c119          .             0.0714         0.1000   -8.613833E-8      
+c120          .             0.0117         0.1000   3.0552993E-7      
+c121          .             0.0828         0.8500   4.4273129E-8      
+c122          .              .              .         -1839.5340      
+c123          .              .              .         -2113.6600      
+c124          .              .              .          1997.2848      
+c125          .              .              .          1997.8338      
+c126          .              .              .          -158.7278      
+c127          .              .              .           117.8032      
+c128          .              .              .            93.7382      
+c129          .              .              .          1096.6346      
+c130          .              .              .            -2.8804      
+c131          .              .              .             2.6275      
+c132          .              .              .         -1843.1910      
+c133          .              .              .         -1120.6331      
+c134          .              .              .           -22.7904      
+c135          .              .              .             3.0960      
+c136          .              .              .         -3357.4876      
+c137          .              .              .         -3811.1997      
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                10/10/21 16:06:35 Page 27
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE qp Using NLP From line 268
+
+
+     VAR x  List of continuous variables
+
+            LOWER          LEVEL          UPPER         MARGINAL
+
+c138          .              .              .          1997.2191      
+c139          .              .              .          1997.1245      
+c140          .              .              .          1360.2476      
+c141          .              .              .          1814.2537      
+c142          .              .              .            -3.7558      
+c143          .              .              .          -554.6192      
+c144          .              .              .         -1642.6346      
+c145          .              .              .         -1682.4187      
+c146          .              .              .             8.6619      
+c147          .              .              .         -1985.2908      
+c148          .              .              .         -3810.8528      
+c149          .              .              .          1997.5539      
+c150          .              .              .          1997.1246      
+c151          .              .              .            -1.8028      
+c152          .              .              .          1814.2538      
+c153          .              .              .            -1.7513      
+c154          .              .              .            -0.6380      
+c155          .              .              .          -554.6172      
+c156          .              .              .         -1642.6347      
+c157          .              .              .         -1682.4189      
+c158          .              .              .             8.6617      
+c159          .              .              .         -1984.9944      
+c160          .              .              .         -2350.7539      
+c161          .              .              .          1997.5541      
+c162          .              .              .          1997.4525      
+c163          .              .              .            -1.7995      
+c164          .              .              .           353.6143      
+c165          .              .              .            -1.7479      
+c166          .              .              .            -1.7938      
+c167          .              .              .          -175.1562      
+c168          .              .              .          -223.8359      
+c169          .              .              .             4.6850      
+c170          .              .              .         -1839.3495      
+c171          .              .              .         -3810.7292      
+c172          .              .              .          1997.6007      
+c173          .              .              .          1997.1246      
+c174          .              .              .          -158.7434      
+c175          .              .              .          1814.2542      
+c176          .              .              .            95.6392      
+c177          .              .              .          1099.3387      
+c178          .              .              .            -0.7086      
+c179          .              .              .          -555.9117      
+c180          .              .              .         -1642.6365      
+c181          .              .              .         -1682.4192      
+c182          .              .              .             8.6614      
+c183          .              .              .         -1839.0497      
+c184          .              .              .         -2350.6304      
+c185          .              .              .          1997.6009      
+c186          .              .              .          1997.4525      
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                10/10/21 16:06:35 Page 28
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE qp Using NLP From line 268
+
+
+     VAR x  List of continuous variables
+
+            LOWER          LEVEL          UPPER         MARGINAL
+
+c187          .              .              .          -158.7435      
+c188          .              .              .           353.6146      
+c189          .              .              .            95.6391      
+c190          .              .              .          1098.1764      
+c191          .              .              .            -1.3753      
+c192          .              .              .          -175.1585      
+c193          .              .              .          -223.8363      
+c194          .              .              .             4.6846      
+c195          .              .              .         -1838.6265      
+c196          .              .              .         -1040.5374      
+c197          .              .              .          1997.6011      
+c198          .              .              .          1997.9254      
+c199          .              .              .          -158.7364      
+c200          .              .              .          -956.6262      
+c201          .              .              .            95.6461      
+c202          .              .              .          1098.1834      
+c203          .              .              .            -2.5940      
+c204          .              .              .          1075.4090      
+c205          .              .              .            -1.5928      
+c206          .             1.1855        14.7010   3.1613921E-9      
+c207          .             1.1855        14.7010   3.1613921E-9      
+c208          .             1.1855        14.7010   3.1613870E-9      
+c209          .             1.1855        14.7010   3.1613870E-9      
+c210          .             0.1697        14.7010   2.3928229E-8      
+c211          .             2.1697        15.8510   1.5932336E-9      
+c212          .             0.8500         0.8500     -1517.1550      
+c213          .             0.0714         0.1000   -8.613834E-8      
+c214          .             0.0117         0.1000   3.0552993E-7      
+c215          .             0.0828         0.8500   4.4273129E-8      
+c216          .             0.0286         0.1000   8.6138338E-8      
+c217          .             0.0883         0.1000   -3.055299E-7      
+c218          .             0.7672         0.8500   -4.427313E-8      
+c219          .             0.1000         0.1000     -1944.2877      
+c220          .              .              .         -1860.5879      
+c221          .              .              .         -2350.8577      
+c222          .              .              .          1997.5935      
+c223          .              .              .          1997.4525      
+c224          .              .              .          -136.9874      
+c225          .              .              .           353.6118      
+c226          .              .              .          1841.2382      
+c227          .              .              .          1119.6999      
+c228          .              .              .            21.7917      
+c229          .              .              .            -4.6153      
+c230          .              .              .          -175.4497      
+c231          .              .              .          -223.8153      
+c232          .              .              .             4.6874      
+c233          .              .              .         -1860.1725      
+c234          .              .              .         -1040.7662      
+c235          .              .              .          1997.5937      
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                10/10/21 16:06:35 Page 29
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE qp Using NLP From line 268
+
+
+     VAR x  List of continuous variables
+
+            LOWER          LEVEL          UPPER         MARGINAL
+
+c236          .              .              .          1997.9253      
+c237          .              .              .          -136.9727      
+c238          .              .              .          -956.6274      
+c239          .              .              .          1841.2529      
+c240          .              .              .          1119.7145      
+c241          .              .              .            20.5788      
+c242          .              .              .            -6.9289      
+c243          .              .              .          1075.4361      
+c244          .              .              .            -1.5916      
+c245          .              .              .         -1857.4351      
+c246          .              .              .           767.3472      
+c247          .              .              .          1997.5944      
+c248          .              .              .          2000.6830      
+c249          .              .              .          -136.9783      
+c250          .              .              .         -2770.2309      
+c251          .              .              .          1841.2473      
+c252          .              .              .          1119.7089      
+c253          .              .              .            20.5732      
+c254          .              .              .            -5.2958      
+c255          .              .              .            -3.2638      
+c256          .             4.7329        13.8510   4.174707E-10      
+c257          .             4.5423        13.7510   4.583194E-10      
+c258          .             3.1603        13.8510   9.156878E-10      
+c259          .             2.9697        13.7510   1.0023344E-9      
+c260          .             4.6329        13.8510   4.410953E-10      
+c261          .             4.5896        13.8510   4.515274E-10      
+c262          .             0.1000         0.1000     -1198.7793      
+c263          .             0.0473         0.1000   8.7710938E-9      
+c264          .             0.1000         0.1000     -1188.7286      
+c265          .             0.0473         0.1000   8.7710937E-9      
+c266          .              .              .         -3122.6073      
+c267          .              .              .         -2126.6150      
+c268          .              .              .          1997.2662      
+c269          .              .              .          1997.5183      
+c270          .              .              .          1125.6944      
+c271          .              .              .           128.8417      
+c272          .              .              .            -3.5908      
+c273          .              .              .            35.5830      
+c274          .              .              .             1.9173      
+c275          .              .              .            -0.0290      
+c276          .              .              .             0.1982      
+c277          .              .              .       -7.799378E-7      
+c278          .              .              .         -1839.2345      
+c279          .              .              .         -2126.1666      
+c280          .              .              .          1997.6016      
+c281          .              .              .          1997.5141      
+c282          .              .              .          -158.4588      
+c283          .              .              .           128.8424      
+c284          .              .              .          1098.4232      
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                10/10/21 16:06:35 Page 30
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE qp Using NLP From line 268
+
+
+     VAR x  List of continuous variables
+
+            LOWER          LEVEL          UPPER         MARGINAL
+
+c285          .              .              .            -2.4994      
+c286          .              .              .            35.5880      
+c287          .              .              .             1.9166      
+c288          .              .              .             1.3128      
+c289          .              .              .             0.1936      
+c290          .              .              .             0.0011      
+c291          .              .              .         -1839.5162      
+c292          .              .              .         -2113.9453      
+c293          .              .              .          1997.6064      
+c294          .              .              .          1997.5122      
+c295          .              .              .          -158.4612      
+c296          .              .              .           117.8041      
+c297          .              .              .          1098.4209      
+c298          .              .              .            -2.3190      
+c299          .              .              .             2.6133      
+c300          .              .              .             1.3183      
+c301          .              .              .             0.0165      
+c302          .              .              .             0.0122      
+c303          .              .              .         -3124.4487      
+c304          .              .              .         -2349.3429      
+c305          .              .              .          1995.5579      
+c306          .              .              .          1999.1644      
+c307          .              .              .          1125.6907      
+c308          .              .              .           353.6230      
+c309          .              .              .            -2.4350      
+c310          .              .              .          -173.2747      
+c311          .              .              .          -222.0974      
+c312          .              .              .             4.6509      
+c313          .              .              .           555.0843      
+c314          .              .              .          1641.8837      
+c315          .              .              .          1682.2040      
+c316          .              .              .            -8.1733      
+c317          .             3.2165        13.0010   8.574121E-10      
+c318          .             4.4020        14.7010   5.343837E-10      
+c319          .             3.2165        13.0010   8.574116E-10      
+c320          .             4.4020        14.7010   5.343834E-10      
+c321          .             3.1511        13.0010   8.866812E-10      
+c322          .             5.3208        15.7510   3.782385E-10      
+c323          .             0.0286         0.1000   8.6138327E-8      
+c324          .             0.0367         0.1000   4.6872581E-8      
+c325          .             0.0516         0.1000   -5.225908E-9      
+c326          .             0.7672         0.8500   -4.427313E-8      
+c327          .             0.1000         0.1000      -718.2017      
+c328          .             0.0286         0.1000   8.6138330E-8      
+c329          .             0.0883         0.1000   -3.055299E-7      
+c330          .             0.7672         0.8500   -4.427313E-8      
+c331          .             0.1000         0.1000      -746.3740      
+c332          .              .              .         -1840.6437      
+c333          .              .              .         -1038.7908      
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                10/10/21 16:06:35 Page 31
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE qp Using NLP From line 268
+
+
+     VAR x  List of continuous variables
+
+            LOWER          LEVEL          UPPER         MARGINAL
+
+c334          .              .              .          1995.8899      
+c335          .              .              .          1999.6370      
+c336          .              .              .          -158.4673      
+c337          .              .              .          -956.6252      
+c338          .              .              .          1099.5744      
+c339          .              .              .            -0.4328      
+c340          .              .              .          1077.1594      
+c341          .              .              .            -1.6193      
+c342          .              .              .           556.4208      
+c343          .              .              .          1643.1056      
+c344          .              .              .          1684.5319      
+c345          .              .              .            -8.2001      
+c346          .              .              .         -1992.1303      
+c347          .              .              .         -2349.0513      
+c348          .              .              .          1995.8413      
+c349          .              .              .          1999.1644      
+c350          .              .              .            -1.8185      
+c351          .              .              .           353.6231      
+c352          .              .              .            -0.6402      
+c353          .              .              .             1.2770      
+c354          .              .              .             0.6183      
+c355          .              .              .          -173.2832      
+c356          .              .              .          -222.0993      
+c357          .              .              .             4.6508      
+c358          .              .              .           555.0900      
+c359          .              .              .          1641.8922      
+c360          .              .              .          1682.2059      
+c361          .              .              .            -8.1733      
+c362          .              .              .         -1991.7142      
+c363          .              .              .         -1038.9510      
+c364          .              .              .          1995.8417      
+c365          .              .              .          1999.6375      
+c366          .              .              .            -1.8039      
+c367          .              .              .          -956.6258      
+c368          .              .              .            -0.6257      
+c369          .              .              .             0.0747      
+c370          .              .              .            -1.6912      
+c371          .              .              .          1077.1660      
+c372          .              .              .            -1.6187      
+c373          .              .              .           555.0857      
+c374          .              .              .          1643.1046      
+c375          .              .              .          1684.5256      
+c376          .              .              .            -8.2004      
+c377          .              .              .         -1988.9767      
+c378          .              .              .           769.1623      
+c379          .              .              .          1995.8421      
+c380          .              .              .          2002.3957      
+c381          .              .              .            -1.8095      
+c382          .              .              .         -2770.2296      
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                10/10/21 16:06:35 Page 32
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE qp Using NLP From line 268
+
+
+     VAR x  List of continuous variables
+
+            LOWER          LEVEL          UPPER         MARGINAL
+
+c383          .              .              .            -0.6313      
+c384          .              .              .             0.0691      
+c385          .              .              .            -0.0587      
+c386          .              .              .            -3.2905      
+c387          .              .              .           555.0866      
+c388          .              .              .          1643.1055      
+c389          .              .              .          1682.8884      
+c390          .              .              .            -8.2034      
+c391          .             4.5423        13.7510   4.583194E-10      
+c392          .             3.3842        13.6510   8.138095E-10      
+c393          .             4.5423        13.7510   4.583194E-10      
+c394          .             3.3842        13.6510   8.138095E-10      
+c395          .             4.4896        13.7510   4.714651E-10      
+c396          .             3.6795        14.5010   7.369065E-10      
+c397          .             0.0527         0.1000   -8.771096E-9      
+c398          .             0.2953         0.8500   6.5081755E-9      
+c399          .             0.0527         0.1000   -8.771096E-9      
+c400          .             0.2953         0.8500   6.5081755E-9      
+c401          .              .              .         -1841.1494      
+c402          .              .              .         -1039.6024      
+c403          .              .              .          1996.6946      
+c404          .              .              .          1998.8320      
+c405          .              .              .          -157.1489      
+c406          .              .              .          -956.6259      
+c407          .              .              .             0.2182      
+c408          .              .              .          1076.1064      
+c409          .              .              .            -1.6070      
+c410          .              .              .           176.1241      
+c411          .              .              .           226.4391      
+c412          .              .              .            -3.7291      
+c413          .             2.0144        13.7510   1.6894495E-9      
+c414          .             6.4164        14.7010   1.443844E-10      
+c415          .             2.0144        13.7510   1.6894493E-9      
+c416          .             6.4164        14.7010   1.443844E-10      
+c417          .             1.7503        13.7510   2.0048491E-9      
+c418          .             7.0712        15.6510   1.021642E-10      
+c419          .             0.0516         0.1000   -5.225909E-9      
+c420          .             0.2125         0.8500   1.2890834E-8      
+c421          .             0.5547         0.8500   -6.508176E-9      
+c422          .             0.1000         0.1000      -663.5418      
+c423          .             0.0516         0.1000   -5.225909E-9      
+c424          .             0.7672         0.8500   -4.427313E-8      
+c425          .             0.1000         0.1000      -652.5595      
+c426          .              .              .         -1862.9918      
+c427          .              .              .           768.2978      
+c428          .              .              .          1996.6821      
+c429          .              .              .          2001.5948      
+c430          .              .              .          -132.4507      
+c431          .              .              .         -2770.2304      
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                10/10/21 16:06:35 Page 33
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE qp Using NLP From line 268
+
+
+     VAR x  List of continuous variables
+
+            LOWER          LEVEL          UPPER         MARGINAL
+
+c432          .              .              .            33.2127      
+c433          .              .              .            -0.9891      
+c434          .              .              .            -3.2782      
+c435          .              .              .           176.2972      
+c436          .              .              .           224.7926      
+c437          .              .              .            -3.7345      
+c438          .             3.3842        13.6510   8.138095E-10      
+c439          .             3.3842        14.7010   8.509379E-10      
+c440          .             2.4086        13.6510   1.3402663E-9      
+c441          .             2.4086        14.7010   1.3714815E-9      
+c442          .             2.8295        13.6510   1.0723280E-9      
+c443          .             3.4842        14.8010   8.160960E-10      
+c444          .             0.5547         0.8500   -6.508176E-9      
+c445          .             0.1000         0.1000      -964.5901      
+c446          .             0.5547         0.8500   -6.508176E-9      
+c447          .             0.1000         0.1000      -850.6895      
+c448          .              .              .           -10.6152      
+c449          .              .              .            -0.0320      
+c450          .             2.0419        14.6010   1.6849541E-9      
+c451          .             1.1099        14.6010   3.3972052E-9      
+c452          .              .              .          -155.0975      
+c453          .              .              .           156.4623      
+c454          .              .              .          -155.1042      
+c455          .              .              .           156.4619      
+c456          .              .              .          -134.4456      
+c457          .              .              .           134.7576      
+c458          .              .              .          -134.1016      
+c459          .              .              .           134.7587      
+c460          .              .              .          -134.1673      
+c461          .              .              .           134.7572      
+c462          .              .              .          -133.9808      
+c463          .              .              .           134.7604      
+c464          .             1.1855        14.7010   3.1613921E-9      
+c465          .             0.1697        14.7010   2.3928229E-8      
+c466          .              .              .          -133.7652      
+c467          .              .              .           134.7619      
+c468          .             3.2165        13.8510   8.909729E-10      
+c469          .             3.1511        13.8510   9.198158E-10      
+c470          .              .              .            -5.7329      
+c471          .              .              .            -0.0046      
+c472          .              .              .            -5.2891      
+c473          .              .              .            -0.0034      
+c474          .              .              .            -5.0154      
+c475          .              .              .             0.0022      
+c476          .             2.0144        13.7510   1.6894495E-9      
+c477          .             1.7503        13.7510   2.0048491E-9      
+c478          .             3.0259        13.7510   9.746780E-10      
+c479          .             3.1079        13.9510   9.430220E-10      
+c480          .              .              .            -5.0278      
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                10/10/21 16:06:35 Page 34
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE qp Using NLP From line 268
+
+
+     VAR x  List of continuous variables
+
+            LOWER          LEVEL          UPPER         MARGINAL
+
+c481          .              .              .             0.0114      
+c482          .              .              .            -5.4716      
+c483          .              .              .             0.0103      
+c484          .              .              .            -5.7454      
+c485          .              .              .             0.0047      
+c486          .              .              .          1811.3694      
+c487          .              .              .         -1814.7269      
+c488          .             1.1855        14.7010   3.1613921E-9      
+c489          .             2.1697        15.8510   1.5932336E-9      
+c490          .              .              .          1811.3444      
+c491          .              .              .         -1814.7229      
+c492          .              .              .          1811.0778      
+c493          .              .              .         -1814.7270      
+c494          .              .              .          1811.5045      
+c495          .              .              .         -1814.7226      
+c496          .              .              .          1814.2376      
+c497          .              .              .         -1814.7235      
+c498          .             0.8563        13.6510   4.4766874E-9      
+c499          .             0.9402        14.6010   4.0691164E-9      
+c500          .              .              .           352.7309      
+c501          .              .              .          -354.5791      
+c502          .             4.4020        14.7010   5.343837E-10      
+c503          .             5.3208        15.7510   3.782385E-10      
+c504          .              .              .           355.6710      
+c505          .              .              .          -354.5776      
+c506          .              .              .       -5.447163E-9      
+c507          .             0.6547        15.6510   6.0008872E-9      
+c508          .              .            14.7010      2959.8331      
+c509        -0.8500        -0.8500          .          1508.3721      
+c510          .              .            13.8510      1497.8835      
+c511        -0.1000        -0.1000          .          1040.4598      
+c512          .             4.5423        13.7510   4.583194E-10      
+c513        -0.1000         4.4896        13.7510   4.515274E-10      
+c514          .             3.3842        13.6510   8.138095E-10      
+c515        -0.8500         2.8295        13.6510   7.369065E-10      
+c516          .              .            13.8510      1784.8025      
+c517          .              .            13.9510      1461.3063      
+c518          .             4.5423        13.7510   4.583194E-10      
+c519          .             4.5896        13.8510   4.515274E-10      
+c520          .             3.3842        13.6510   8.138095E-10      
+c521          .             3.6795        14.5010   7.369065E-10      
+c522          .              .              .         -2772.5102      
+c523          .             0.1000        14.8010   4.0804161E-8      
+c524          .             5.0678        14.7010   3.842106E-10      
+c525          .              .              .           -10.8284      
+c526          .              .              .       9.2508401E-9      
+c527          .              .              .             0.0198      
+c528          .             4.7329        13.8510   4.174707E-10      
+c529          .              .              .       1.5287355E-8      
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                10/10/21 16:06:35 Page 35
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE qp Using NLP From line 268
+
+
+     VAR x  List of continuous variables
+
+            LOWER          LEVEL          UPPER         MARGINAL
+
+c530          .              .              .            -5.3842      
+c531          .              .              .       6.6839334E-9      
+c532          .              .              .             0.0982      
+c533          .              .              .             1.0000      
+c534          .              .              .          5785.4520      
+c535          .              .              .             1.0000      
+c536          .              .              .            -4.3697      
+c537          .              .              .             0.8425      
+c538          .              .              .             1.0000      
+c539          .              .              .             0.9018      
+c540          .              .              .             0.7555      
+c541          .              .              .       1.3280399E-8      
+c542          .             6.4164        14.7010   1.443844E-10      
+c543          .             3.3842        14.7010   8.509379E-10      
+c545         6.8751        10.4903        17.1874   5.229726E-10      
+c548         2.7501         4.2874         6.8749   1.0847473E-9      
+c549         2.5001         2.7181         2.7499   -1.104228E-7      
+c554         2.7501         4.3479         6.8749   9.456756E-10      
+c557         2.7501         4.2874         6.8749   1.0847247E-9      
+c558         2.5001         2.7181         2.7499   -1.104230E-7      
+c560         2.5001         2.7181         2.7499   -1.104232E-7      
+c561         2.5001         2.7181         2.7499   -1.104231E-7      
+c562         1.0001         1.0173         2.4999   2.3596835E-7      
+c563         1.0001         1.1009         2.4999   3.7826914E-8      
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- VAR mvd               -INF            9.8006        +INF             .          
+
+  mvd  Objective function -- Minimum vapor duty
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+                             0     ERRORS
+                           120  PROJECTED
+GAMS 25.1.1  r66732 Released May 19, 2018 WEX-WEI x86 64bit/MS Windows                                                                                                                                                                10/10/21 16:06:35 Page 36
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+EXECUTION TIME       =        0.015 SECONDS      3 MB  25.1.1 r66732 WEX-WEI
+
+
+USER: Engineering Computer Network                   G180503:1741AO-GEN
+      Purdue University                                           DC581
+      License for teaching and research at degree granting institutions
+
+
+**** FILE SUMMARY
+
+Input      D:\MATLAB\ORPaper_Revision_selected_cases\Feedcase80_2.gms
+Output     D:\MATLAB\ORPaper_Revision_selected_cases\Feedcase80_2.lst
